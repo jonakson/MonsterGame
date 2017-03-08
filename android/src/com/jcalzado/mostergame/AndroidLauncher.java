@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.jcalzado.mostergame.MonsterGame;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -14,6 +13,6 @@ public class AndroidLauncher extends AndroidApplication {
 		// Desactivamos la brújula y el acelerómetro para ahorrar batería.
 		config.useAccelerometer = false;
 		config.useCompass = false;
-		initialize(new MonsterGame(), config);
+		initialize(new Monster(), config);
 	}
 }

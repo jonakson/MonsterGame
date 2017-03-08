@@ -1,14 +1,13 @@
 package com.jcalzado.mostergame;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -17,39 +16,35 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.Iterator;
 
-public class MonsterGame extends ApplicationAdapter {
+public class PantallaJuego implements Screen {
 
-	private Texture imagenGota;
-	private Texture imagenMonster;
-	private Sound sonidoGota, sonidoMonster;
-	private Music musicaLluvia;
-	private OrthographicCamera camara;
-	private SpriteBatch batch;
-	private Rectangle monster;
-	private Array<Rectangle> gotasLluvia;
-	private long tiempoUltimaGota;
+	final Monster juego;
+	Texture imagenGota;
+	Texture imagenMonster;
+	Sound sonidoGota;
+	Sound sonidoMonster;
+	Music musicaLluvia;
+	OrthographicCamera camara;
+	Rectangle monster;
+	Array<Rectangle> gotasLluvia;
+	long tiempoUltimaGota;
 
-	@Override
-	public void create () {
+	public PantallaJuego (final Monster juego) {
+		this.juego = juego;
+
 		// Carga de las imágenes de la Gota y del Monster.
 		imagenGota = new Texture(Gdx.files.internal("gota.png"));
 		imagenMonster = new Texture(Gdx.files.internal("monster.png"));
 
-		// Carga del audio.
+		// Carga de los sonidos e inicio de la música de fondo.
 		sonidoGota = Gdx.audio.newSound(Gdx.files.internal("gota.wav"));
 		sonidoMonster = Gdx.audio.newSound(Gdx.files.internal("monster.wav"));
 		musicaLluvia = Gdx.audio.newMusic(Gdx.files.internal("lluvia.mp3"));
-
-		// Inicio del bucle con la música de fondo.
 		musicaLluvia.setLooping(true);
-		musicaLluvia.play();
 
 		// Creación la cámara.
 		camara = new OrthographicCamera();
 		camara.setToOrtho(false, 800, 480);
-
-		// Creación del SpriteBatch.
-		batch = new SpriteBatch();
 
 		// Creación e inicialización el rectángulo del Monster.
 		monster = new Rectangle();
@@ -65,8 +60,18 @@ public class MonsterGame extends ApplicationAdapter {
 		lanzarGota();
 	}
 
+	private void lanzarGota() {
+		Rectangle gotaLluvia = new Rectangle();
+		gotaLluvia.x = MathUtils.random(0, 800-64);
+		gotaLluvia.y = 480;
+		gotaLluvia.width = 64;
+		gotaLluvia.height = 64;
+		gotasLluvia.add(gotaLluvia);
+		tiempoUltimaGota = TimeUtils.nanoTime();
+	}
+
 	@Override
-	public void render () {
+	public void render(float delta) {
 		// Color de fondo de la pantalla.
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 
@@ -77,16 +82,16 @@ public class MonsterGame extends ApplicationAdapter {
 		camara.update();
 
 		// Se indica al batch que se usará el sistema de coordenadas dado por la cámara.
-		batch.setProjectionMatrix(camara.combined);
+		juego.batch.setProjectionMatrix(camara.combined);
 
-		batch.begin(); // INICIO DEL RENDERIZADO.
+		juego.batch.begin(); // INICIO DEL RENDERIZADO.
 		// Renderizado del Monster.
-		batch.draw(imagenMonster, monster.x, monster.y);
+		juego.batch.draw(imagenMonster, monster.x, monster.y);
 		// Renderizado de las Gotas.
 		for (Rectangle gota: gotasLluvia) {
-			batch.draw(imagenGota, gota.x, gota.y);
+			juego.batch.draw(imagenGota, gota.x, gota.y);
 		}
-		batch.end(); // FIN DEL RENDERIZADO.
+		juego.batch.end(); // FIN DEL RENDERIZADO.
 
 		// Captura de la entrada (Táctil o Ratón) del jugador para mover el Cubo.
 		if (Gdx.input.isTouched()) {
@@ -134,29 +139,41 @@ public class MonsterGame extends ApplicationAdapter {
 			if (gotaLluvia.overlaps(monster)) {
 				iterador.remove();
 				sonidoMonster.play();
-				// Si una Gota tocal al Monster finalizamos el juego.
-				Gdx.app.exit();
+				juego.setScreen(new PantallaDerrota(juego));
+				dispose();
 			}
 		}
 	}
 
 	@Override
-	public void dispose () {
+	public void show() {
+		musicaLluvia.play();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+
+	}
+
+	@Override
+	public void pause() {
+	}
+
+	@Override
+	public void resume() {
+	}
+
+	@Override
+	public void hide() {
+
+	}
+
+	@Override
+	public void dispose() {
 		imagenGota.dispose();
 		imagenMonster.dispose();
 		sonidoGota.dispose();
 		sonidoMonster.dispose();
 		musicaLluvia.dispose();
-		batch.dispose();
-	}
-
-	private void lanzarGota() {
-		Rectangle gotaLluvia = new Rectangle();
-		gotaLluvia.x = MathUtils.random(0, 800-64);
-		gotaLluvia.y = 480;
-		gotaLluvia.width = 64;
-		gotaLluvia.height = 64;
-		gotasLluvia.add(gotaLluvia);
-		tiempoUltimaGota = TimeUtils.nanoTime();
 	}
 }

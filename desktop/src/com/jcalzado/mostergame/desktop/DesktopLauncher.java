@@ -2,7 +2,9 @@ package com.jcalzado.mostergame.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.jcalzado.mostergame.MonsterGame;
+import com.jcalzado.mostergame.Monster;
+
+
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
@@ -10,6 +12,6 @@ public class DesktopLauncher {
 		config.title = "Monster Game";
 		config.width = 800;
 		config.height = 480;
-		new LwjglApplication(new MonsterGame(), config);
+		new LwjglApplication(new Monster(), config);
 	}
 }
