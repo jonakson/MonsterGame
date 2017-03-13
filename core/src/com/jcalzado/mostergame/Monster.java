@@ -2,6 +2,11 @@ package com.jcalzado.mostergame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.jcalzado.mostergame.helpers.AssetsManager;
+import com.jcalzado.mostergame.screens.PantallaDerrota;
+import com.jcalzado.mostergame.screens.PantallaInicial;
+import com.jcalzado.mostergame.screens.PantallaJuego;
+import com.jcalzado.mostergame.screens.PantallaPausa;
 
 public class Monster extends Game {
 

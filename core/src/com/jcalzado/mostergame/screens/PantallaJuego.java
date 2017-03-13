@@ -1,4 +1,4 @@
-package com.jcalzado.mostergame;
+package com.jcalzado.mostergame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.jcalzado.mostergame.Monster;
 
 import java.util.Iterator;
 
