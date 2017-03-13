@@ -3,11 +3,8 @@ package com.jcalzado.mostergame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -19,28 +16,14 @@ import java.util.Iterator;
 public class PantallaJuego implements Screen {
 
 	final Monster juego;
-	Texture imagenGota;
-	Texture imagenMonster;
-	Sound sonidoGota;
-	Sound sonidoMonster;
-	Music musicaLluvia;
+
 	OrthographicCamera camara;
 	Rectangle monster;
 	Array<Rectangle> gotasLluvia;
 	long tiempoUltimaGota;
 
-	public PantallaJuego (final Monster juego) {
+	public PantallaJuego (Monster juego) {
 		this.juego = juego;
-
-		// Carga de las imágenes de la Gota y del Monster.
-		imagenGota = new Texture(Gdx.files.internal("gota.png"));
-		imagenMonster = new Texture(Gdx.files.internal("monster.png"));
-
-		// Carga de los sonidos e inicio de la música de fondo.
-		sonidoGota = Gdx.audio.newSound(Gdx.files.internal("gota.wav"));
-		sonidoMonster = Gdx.audio.newSound(Gdx.files.internal("monster.wav"));
-		musicaLluvia = Gdx.audio.newMusic(Gdx.files.internal("lluvia.mp3"));
-		musicaLluvia.setLooping(true);
 
 		// Creación la cámara.
 		camara = new OrthographicCamera();
@@ -86,10 +69,10 @@ public class PantallaJuego implements Screen {
 
 		juego.batch.begin(); // INICIO DEL RENDERIZADO.
 		// Renderizado del Monster.
-		juego.batch.draw(imagenMonster, monster.x, monster.y);
+		juego.batch.draw(juego.assetsManager().imagenMonster, monster.x, monster.y);
 		// Renderizado de las Gotas.
 		for (Rectangle gota: gotasLluvia) {
-			juego.batch.draw(imagenGota, gota.x, gota.y);
+			juego.batch.draw(juego.assetsManager().imagenGota, gota.x, gota.y);
 		}
 		juego.batch.end(); // FIN DEL RENDERIZADO.
 
@@ -133,13 +116,13 @@ public class PantallaJuego implements Screen {
 			Rectangle gotaLluvia = iterador.next();
 			gotaLluvia.y -= 200 * Gdx.graphics.getDeltaTime();
 			if (gotaLluvia.y + 64 < 0) {
-				sonidoGota.play();
+				juego.assetsManager().sonidoGota.play();
 				iterador.remove();
 			}
 			if (gotaLluvia.overlaps(monster)) {
 				iterador.remove();
-				sonidoMonster.play();
-				juego.setScreen(new PantallaDerrota(juego));
+				juego.assetsManager().sonidoMonster.play();
+				juego.setScreen(juego.getGameOverScreen());
 				dispose();
 			}
 		}
@@ -147,33 +130,21 @@ public class PantallaJuego implements Screen {
 
 	@Override
 	public void show() {
-		musicaLluvia.play();
+		juego.assetsManager().musicaLluvia.play();
 	}
 
 	@Override
-	public void resize(int width, int height) {
-
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void pause() {
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-	}
+	public void resume() {}
 
 	@Override
-	public void hide() {
-
-	}
+	public void hide() {}
 
 	@Override
-	public void dispose() {
-		imagenGota.dispose();
-		imagenMonster.dispose();
-		sonidoGota.dispose();
-		sonidoMonster.dispose();
-		musicaLluvia.dispose();
-	}
+	public void dispose() {}
 }

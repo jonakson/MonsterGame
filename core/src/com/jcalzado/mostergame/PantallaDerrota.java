@@ -1,5 +1,4 @@
 package com.jcalzado.mostergame;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -13,7 +12,7 @@ public class PantallaDerrota implements Screen {
     OrthographicCamera camara;
     Texture pantallaDerrota;
 
-    public PantallaDerrota (final Monster juego) {
+    public PantallaDerrota (Monster juego) {
         this.juego = juego;
         camara = new OrthographicCamera();
         camara.setToOrtho(false, 800, 480);
@@ -38,38 +37,28 @@ public class PantallaDerrota implements Screen {
         juego.batch.end();
 
         if (Gdx.input.isTouched()) {
-            juego.setScreen(new PantallaInicial(juego));
+            juego.setScreen(juego.getHomeScreen());
             dispose();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            juego.setScreen(new PantallaInicial(juego));
+            juego.setScreen(juego.getHomeScreen());
             dispose();
         }
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
+    public void resize(int width, int height) {}
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() {}
 }
